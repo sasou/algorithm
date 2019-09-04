@@ -13,12 +13,13 @@ class Encrypt {
 
 
     /**
-     * 对字符串进行加密。
+     * 对字符串进行加密
+     *
      * @param $txt
      * @param string $key
      * @return string
      */
-    public static function easyEncode($txt, $key = '')
+    public static function encode($txt, $key = '')
     {
         $chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-=+";
         $nh = rand(0,64);
@@ -37,12 +38,13 @@ class Encrypt {
     }
 
     /**
-     * 对字符串进行解密。
+     * 对字符串进行解密
+     *
      * @param $txt
      * @param string $key
      * @return bool|string
      */
-    public static function easyDecode($txt, $key = '')
+    public static function decode($txt, $key = '')
     {
         $txt = pack("H*", $txt);
         $chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-=+";

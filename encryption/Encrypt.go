@@ -12,12 +12,12 @@ import (
 )
 
 func main() {
-	a := easyEncode("hello world!", "abc")
-	fmt.Println(easyDecode(a, "abc"))
+	a := encode("hello world!", "abc")
+	fmt.Println(decode(a, "abc"))
 
 }
 
-func easyEncode(txt string, key string) string {
+func encode(txt string, key string) string {
 	chars := "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-=+"
 	nh := randInt(0, 64)
 	ch := chars[nh]
@@ -39,7 +39,7 @@ func easyEncode(txt string, key string) string {
 	return hex.EncodeToString(buffer.Bytes())
 }
 
-func easyDecode(txt string, key string) string {
+func decode(txt string, key string) string {
 	chars := "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-=+"
 	s, err := hex.DecodeString(txt)
 	if err != nil {
