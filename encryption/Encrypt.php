@@ -31,7 +31,7 @@ class Encrypt {
         $i=0;$j=0;$k = 0;
         for ($i=0; $i<strlen($txt); $i++) {
             $k = $k == strlen($mdKey) ? 0 : $k;
-            $j = ($nh+strpos($chars,$txt[$i])+ord($mdKey[$k++]))%64;
+            $j = ($nh+strpos($chars,$txt[$i])+ord($mdKey[$k++]))%65;
             $tmp .= $chars[$j];
         }
         return bin2hex($ch.$tmp);
@@ -58,7 +58,7 @@ class Encrypt {
         for ($i=0; $i<strlen($txt); $i++) {
             $k = $k == strlen($mdKey) ? 0 : $k;
             $j = strpos($chars,$txt[$i])-$nh - ord($mdKey[$k++]);
-            while ($j<0) $j+=64;
+            while ($j<0) $j+=65;
             $tmp .= $chars[$j];
         }
         return base64_decode($tmp);

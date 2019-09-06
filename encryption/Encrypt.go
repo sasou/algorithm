@@ -32,7 +32,7 @@ func encode(txt string, key string) string {
 		if k == len(mdKey) {
 			k = 0
 		}
-		j = (nh + strings.IndexByte(chars, txt[i]) + int(mdKey[k])) % 64
+		j = (nh + strings.IndexByte(chars, txt[i]) + int(mdKey[k])) % 65
 		k++
 		buffer.WriteByte(chars[j])
 	}
@@ -61,7 +61,7 @@ func decode(txt string, key string) string {
 		j = strings.IndexByte(chars, txt[i]) - nh - int(mdKey[k])
 		k++
 		for j < 0 {
-			j += 64
+			j += 65
 		}
 		buffer.WriteByte(chars[j])
 	}

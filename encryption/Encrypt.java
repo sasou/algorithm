@@ -33,7 +33,7 @@ public class Encrypt {
 		int i = 0, j = 0, k = 0;
 		for (i = 0; i < txt.length(); i++) {
 			k = (k == mdKey.length()) ? 0 : k;
-			j = (nh + chars.indexOf(txt.charAt(i)) + ord(mdKey.charAt(k++))) % 64;
+			j = (nh + chars.indexOf(txt.charAt(i)) + ord(mdKey.charAt(k++))) % 65;
 			tmp += chars.substring(j, j + 1);
 		}
 		tmp = ch + tmp;
@@ -61,7 +61,7 @@ public class Encrypt {
 			k = (k == mdKey.length()) ? 0 : k;
 			j = chars.indexOf(txt.charAt(i)) - nh - ord(mdKey.charAt(k++));
 			while (j < 0)
-				j += 64;
+				j += 65;
 			tmp += chars.substring(j, j + 1);
 		}
 		return base64Decoder(tmp);
