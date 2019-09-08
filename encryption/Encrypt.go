@@ -7,24 +7,21 @@ import (
 	"encoding/hex"
 	"fmt"
 	"math/rand"
-	"strings"
 	"time"
 )
 
 func main() {
 	a := encode("hello world!", "abc")
 	fmt.Println(decode(a, "abc"))
-
 }
 
 func encode(txt string, key string) string {
-	chars := "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-=+"
-	nh := randInt(0, 64)
-	ch := chars[nh]
+	txt = base64.StdEncoding.EncodeToString([]byte(txt))
+	nh := randInt(0, 32)
+	ch := byte(nh)
 	key_ch := fmt.Sprintf("%s%s", key, string(ch))
 	mdKey := md5V(key_ch)
 	mdKey = mdKey[nh%8 : nh%8+nh%8+7]
-	txt = base64.StdEncoding.EncodeToString([]byte(txt))
 	i, j, k := 0, 0, 0
 	var buffer bytes.Buffer
 	buffer.WriteByte(ch)
@@ -32,22 +29,21 @@ func encode(txt string, key string) string {
 		if k == len(mdKey) {
 			k = 0
 		}
-		j = (nh + strings.IndexByte(chars, txt[i]) + int(mdKey[k])) % 65
+		j = (nh + int(txt[i]) + int(mdKey[k])) % 128
 		k++
-		buffer.WriteByte(chars[j])
+		buffer.WriteByte(byte(j))
 	}
 	return hex.EncodeToString(buffer.Bytes())
 }
 
 func decode(txt string, key string) string {
-	chars := "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-=+"
 	s, err := hex.DecodeString(txt)
 	if err != nil {
 		return ""
 	}
 	txt = string(s)
 	ch := txt[0]
-	nh := strings.IndexByte(chars, ch)
+	nh := int(ch)
 	key_ch := fmt.Sprintf("%s%s", key, string(ch))
 	mdKey := md5V(key_ch)
 	mdKey = mdKey[nh%8 : nh%8+nh%8+7]
@@ -58,12 +54,12 @@ func decode(txt string, key string) string {
 		if k == len(mdKey) {
 			k = 0
 		}
-		j = strings.IndexByte(chars, txt[i]) - nh - int(mdKey[k])
+		j = int(txt[i]) - nh - int(mdKey[k])
 		k++
 		for j < 0 {
-			j += 65
+			j += 128
 		}
-		buffer.WriteByte(chars[j])
+		buffer.WriteByte(byte(j))
 	}
 	b, err := base64.StdEncoding.DecodeString(buffer.String())
 	if err != nil {
