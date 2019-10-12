@@ -2,6 +2,7 @@
 
 import (
 	"archive/zip"
+	"encoding/base64"
 	"encoding/json"
 	"flag"
 	"fmt"
@@ -16,12 +17,14 @@ var outDest = flag.String("out", "", "string类型参数")
 var fileList = flag.String("file", "", "string类型参数")
 
 type fileInfo struct {
-	name string
-	path string
+	Name string `json:"name"`
+	Path string `json:"path"`
 }
 
 func main() {
 	flag.Parse()
+	b, _ := base64.StdEncoding.DecodeString(*fileList)
+	*fileList = strings.ReplaceAll(string(b), "\\", "")
 	doCompress(*outDest, *fileList)
 }
 
@@ -29,16 +32,16 @@ func doCompress(outDest string, fileList string) {
 	var list []fileInfo
 	err := json.Unmarshal([]byte(fileList), &list)
 	if err == nil {
-		var files = []*os.File{}
-		var names = []string{}
-		var i = 0
+		var files []*os.File
+		var names []string
 		var fileos *os.File
 		var err error
+		var i = 0
 		for _, file := range list {
-			fileos, err = os.Open(file.path)
+			fileos, err = os.Open(file.Path)
 			if err == nil {
-				names[i] = file.name
-				files[i] = fileos
+				names = append(names, file.Name)
+				files = append(files, fileos)
 			}
 			defer fileos.Close()
 			i++
