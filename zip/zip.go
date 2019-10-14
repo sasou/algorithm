@@ -25,6 +25,8 @@ func main() {
 	flag.Parse()
 	b, _ := base64.StdEncoding.DecodeString(*fileList)
 	*fileList = strings.ReplaceAll(string(b), "\\", "")
+	fmt.Println(*outDest)
+	fmt.Println(*fileList)
 	doCompress(*outDest, *fileList)
 }
 
@@ -55,6 +57,7 @@ func doCompress(outDest string, fileList string) {
 
 //压缩
 func Compress(names []string, files []*os.File, dest string) error {
+	os.MkdirAll(getDir(dest), 0755)
 	d, _ := os.Create(dest)
 	defer d.Close()
 	w := zip.NewWriter(d)
