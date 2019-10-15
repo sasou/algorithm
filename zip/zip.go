@@ -97,13 +97,13 @@ func compress(name string, file *os.File, prefix string, zw *zip.Writer) error {
 		}
 	} else {
 		header, err := zip.FileInfoHeader(info)
+		if err != nil {
+			return err
+		}
 		if name == "" {
 			header.Name = prefix + "/" + header.Name
 		} else {
 			header.Name = prefix + "/" + name
-		}
-		if err != nil {
-			return err
 		}
 		writer, err := zw.CreateHeader(header)
 		if err != nil {
